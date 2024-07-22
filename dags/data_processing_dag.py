@@ -32,7 +32,8 @@ def run_spark_job():
 
     person_df = spark.read.csv("s3a://data/person_data.csv", header=True)
 
-    country_df = spark.read.csv("s3a://data/country_data.csv", header=True)
+    country_df = spark.read.csv("s3a://data/"
+                                "", header=True)
 
     result_df = (person_df
                  .where((person_df.birthday < datetime.now() - relativedelta(years=30)) & (person_df.blood_type.isin('A+', 'A-', 'AB+', 'AB-')))
