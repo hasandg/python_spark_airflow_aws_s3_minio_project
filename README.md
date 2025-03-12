@@ -78,3 +78,4 @@ you can check the results in the `data` directory located in the MinIO webserver
 | Airflow        | [http://localhost:8060](http://localhost:8085) | ``` User: airflow``` <br> ``` Pass: airflow```       |         |
 | MinIO          | [http://localhost:9001](http://localhost:9001) | ``` User: minioadmin``` <br> ``` Pass: minioadmin``` |           |
 | Postgres       | **Server/Database:** localhost:5432/airflow    | ``` User: airflow``` <br> ``` Pass: airflow```       |           | 
+
