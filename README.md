@@ -1,22 +1,20 @@
-# Docker, Spark, Airflow, ve MinIO Kullanarak Veri Analizi
+# Data Analysis Using Docker, Spark, Airflow, and MinIO
 
 
-Bu proje, veri analizi iş akışını oluşturmak için Docker, Spark, Airflow ve MinIO teknolojilerini kullanarak güçlü ve
-esnek bir çözüm sunuyor. Projenin amacı, veri setini oluşturan iki adet CSV dosyasını MinIO'dan yüklemek, Spark'ı 
-kullanarak veri setini analiz etmek ve sonuçları yine MinIO'ya kaydetmektir.
+This project offers a powerful and flexible solution for creating a data analysis workflow using Docker, Spark, Airflow, and MinIO technologies. The aim of the project is to load two CSV files that make up the dataset from MinIO, analyze the dataset using Spark, and save the results back to MinIO.
 
 ![diagram](./docker_spark_airflow_minio.png)
 
-## 🛠 Kullanılan Teknolojiler ve Metodoloji
+## 🛠 Technologies and Methodology Used
 
 
-1. PySpark kullanılarak Python dilinde bir script yazıldı. Bu script, Airflow scheduler desteği ile 10 dakikada bir verileri MinIO'dan okuyup, Apache Spark kullanarak veri analizi yapar ve sonuçları MinIO'ya kaydeder.
-2. Docker ile apache/airflow:2.9.3 base imajı kullanılarak güncel Java ve PySpark kütüphaneleri içeren özel bir Docker imajı oluşturuldu. MinIO erişimi için; AWS'in disk ürünü olan S3 ile uyumlu bağlantı kütüphanesini içeren jar dosyaları da bu imaja eklendi.
+1. A script was written in Python using PySpark. This script reads data from MinIO every 10 minutes with Airflow scheduler support, performs data analysis using Apache Spark, and saves the results to MinIO.
+2. A custom Docker image containing the latest Java and PySpark libraries was created using the apache/airflow:2.9.3 base image. JAR files containing connection libraries compatible with AWS's disk product S3 were also added to this image for MinIO access.
 
-3. Proje, aşağıdaki sürümlerle geliştirilmiş ve test edilmiştir:
+3. The project was developed and tested with the following versions:
 
 
-| Yazılım        | Versiyon     |
+| Software       | Version      |
 |----------------|--------------|
 | OpenJDK        | `17.0.2`     |
 | Docker         | `25.0.3`     |
@@ -29,53 +27,53 @@ kullanarak veri setini analiz etmek ve sonuçları yine MinIO'ya kaydetmektir.
 | MinIO          | `2024.7.16`  |
 
 
-# 🚀 Uygulamanın Çalıştırılması
-## 1. Özel Airflow İmajının Oluşturulması
+# 🚀 Running the Application
+## 1. Creating the Custom Airflow Image
 
     $ cd python_spark_airflow_aws_s3_minio/src/
     $ docker build --rm -t docker-airflow-custom1:latest .  
 
-## 2. Docker Compose ile Uygulamanın Çalıştırılması
-Container'ları başlatmak için:
+## 2. Running the Application with Docker Compose
+To start the containers:
 
     $ cd python_spark_airflow_aws_s3_minio/
     $ docker-compose up -d
 
-Çalışma sonrasında container'ları durdurmak için:
+To stop the containers after operation:
 
     $ docker-compose down
 
 
-## MinIO Webserver'a verilerin yüklenmesi
+## Uploading data to the MinIO Webserver
 
 [http://localhost:9001](http://localhost:9001)
 
-MinIO webserver'a erişmek için kullanıcı adı ve şifre: 
+Username and password to access the MinIO webserver: 
 
 ``` User: minioadmin``` <br> ``` Pass: minioadmin```
 
-MinIO webserver'a erişildikten sonra, `data` adında bir bucket oluşturulmalıdır.
-"person_data.csv" ve "country_data.csv" dosyaları bu bucket içine yüklenmelidir.
+After accessing the MinIO webserver, a bucket named `data` must be created.
+The files "person_data.csv" and "country_data.csv" should be uploaded to this bucket.
 
-## Airflow Webserver'a erişim
+## Accessing the Airflow Webserver
 
 [http://localhost:8060](http://localhost:8060)
 
-Airflow webserver'a erişmek için kullanıcı adı ve şifre: 
+Username and password to access the Airflow webserver: 
 
 ``` User: airflow``` <br> ``` Pass: airflow```
 
-python_spark_airflow_aws_s3_minio/dags klasörüne eklenen dag dosyaları otomatik olarak airflow webserver'da görüntülenecektir.
-Bu dosyalar web arayüzünden etkinleştirilerek çalıştırılabilir. Bu arayüzden "data_processing_dag.py" dosyasını etkinleştirerek 
-sonuçları MinIO webserver'da bulunan data dizininden kontrol edebilirsiniz.
+DAG files added to the python_spark_airflow_aws_s3_minio/dags folder will automatically be displayed in the airflow webserver.
+These files can be activated and run from the web interface. By activating the "data_processing_dag.py" file from this interface,
+you can check the results in the data directory located in the MinIO webserver.
 
-`python_spark_airflow_aws_s3_minio/dags` klasörüne eklenen DAG dosyaları otomatik olarak Airflow webserver'da görüntülenecektir. 
-Bu dosyalar web arayüzünden etkinleştirilerek çalıştırılabilir. Bu arayüzden `data_processing_dag.py` dosyasını etkinleştirerek 
-sonuçları MinIO webserver'da bulunan `data` dizininden kontrol edebilirsiniz.
+DAG files added to the `python_spark_airflow_aws_s3_minio/dags` folder will automatically be displayed in the Airflow webserver.
+These files can be activated and run from the web interface. By activating the `data_processing_dag.py` file from this interface,
+you can check the results in the `data` directory located in the MinIO webserver.
 
-## Erişim Bilgileri 
+## Access Information 
 
-| Uygulama       | URL                                            | Kullanıcı adı ve şifre                               |
+| Application    | URL                                            | Username and password                               |
 |----------------|------------------------------------------------|------------------------------------------------------|
 | Airflow        | [http://localhost:8060](http://localhost:8085) | ``` User: airflow``` <br> ``` Pass: airflow```       |         |
 | MinIO          | [http://localhost:9001](http://localhost:9001) | ``` User: minioadmin``` <br> ``` Pass: minioadmin``` |           |
